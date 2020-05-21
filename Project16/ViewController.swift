@@ -33,11 +33,11 @@ class ViewController: UIViewController, MKMapViewDelegate {
     }
     
     func capitals(){
-        let london = Capital(title: "London", coordinate: CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275), info: "Home to the 2012 summer olimpics.")
-        let oslo  = Capital(title: "Oslo", coordinate: CLLocationCoordinate2D(latitude: 59.95, longitude: 10.74), info: "It was founded 1000 years ago.")
-        let paris  = Capital(title: "Paris", coordinate: CLLocationCoordinate2D(latitude: 48.8567, longitude: 2.3508), info: "Ofen called the city of light")
-        let rome  = Capital(title: "Rome", coordinate: CLLocationCoordinate2D(latitude: 41.9, longitude: 12.5), info: "Has a hole country inside it")
-        let washington  = Capital(title: "Washington", coordinate: CLLocationCoordinate2D(latitude: 38.895111, longitude: -77.036667), info: "Named after George himself")
+        let london = Capital(title: "London", coordinate: CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275), info: "Home to the 2012 summer olimpics.", wikiUrl: "https://en.wikipedia.org/wiki/London")
+        let oslo  = Capital(title: "Oslo", coordinate: CLLocationCoordinate2D(latitude: 59.95, longitude: 10.74), info: "It was founded 1000 years ago.", wikiUrl: "https://en.wikipedia.org/wiki/Oslo")
+        let paris  = Capital(title: "Paris", coordinate: CLLocationCoordinate2D(latitude: 48.8567, longitude: 2.3508), info: "Ofen called the city of light", wikiUrl: "https://en.wikipedia.org/wiki/Paris")
+        let rome  = Capital(title: "Rome", coordinate: CLLocationCoordinate2D(latitude: 41.9, longitude: 12.5), info: "Has a hole country inside it", wikiUrl: "https://en.wikipedia.org/wiki/Rome")
+        let washington  = Capital(title: "Washington", coordinate: CLLocationCoordinate2D(latitude: 38.895111, longitude: -77.036667), info: "Named after George himself", wikiUrl: "https://en.wikipedia.org/wiki/Washington")
         
         mapView.addAnnotations([london,oslo,paris,rome,washington])
     }
@@ -49,7 +49,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
         if annotationView == nil {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
-            annotationView?.pinTintColor = .magenta
+            annotationView?.pinTintColor = .orange
             let btn = UIButton(type: .detailDisclosure)
             annotationView?.rightCalloutAccessoryView = btn
         } else {
@@ -62,9 +62,14 @@ class ViewController: UIViewController, MKMapViewDelegate {
         guard let capital = view.annotation as? Capital else { return }
         let placeName = capital.title
         let placeInfo = capital.info
+        let wikiDetails = capital.wikiUrl
         
         let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        ac.addAction(UIAlertAction(title: "See more", style: .default, handler: { action in
+            let detailVC = DetailViewController()
+            detailVC.url = wikiDetails
+            self.navigationController?.pushViewController(detailVC, animated: true)
+        }))
         present(ac, animated: true)
         
     }
